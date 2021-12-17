@@ -28,15 +28,15 @@ namespace FoodShop.Web.Services
             {
                 var client = httpClient.CreateClient("FoodShop");
                 HttpRequestMessage requestMessage = new HttpRequestMessage();
-                requestMessage.Headers.Add("Accept","application/json");
-                requestMessage.RequestUri=new Uri(apiRequest.Url);
+                requestMessage.Headers.Add("Accept", "application/json");
+                requestMessage.RequestUri = new Uri(apiRequest.Url);
                 client.DefaultRequestHeaders.Clear();
                 if (apiRequest.Data != null)
                 {
-                    requestMessage.Content = new StringContent(JsonConvert.SerializeObject(apiRequest.Data),Encoding.UTF8,"application/json");
+                    requestMessage.Content = new StringContent(JsonConvert.SerializeObject(apiRequest.Data), Encoding.UTF8, "application/json");
                 }
                 HttpResponseMessage apiResponse = null;
-                switch(apiRequest.ApiType)
+                switch (apiRequest.ApiType)
                 {
                     case SD.ApiType.POST:
                         requestMessage.Method = HttpMethod.Post;
@@ -72,6 +72,7 @@ namespace FoodShop.Web.Services
 
                 var apiResponseDto = JsonConvert.DeserializeObject<T>(res);
                 return apiResponseDto;
+            }
         }
     }
 }

@@ -1,8 +1,14 @@
-var builder = WebApplication.CreateBuilder(args);
+using FoodShop.Web;
+using FoodShop.Web.Services;
+using FoodShop.Web.Services.IServices;
 
+var builder = WebApplication.CreateBuilder(args);
+ConfigurationManager Configuration = builder.Configuration;
 // Add services to the container.
 builder.Services.AddControllersWithViews();
-
+builder.Services.AddHttpClient<IProductService, ProductService>();
+SD.ProductAPIBase = Configuration["ServiceUrls:ProductAPI"];
+builder.Services.AddScoped<IProductService, ProductService>();
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
