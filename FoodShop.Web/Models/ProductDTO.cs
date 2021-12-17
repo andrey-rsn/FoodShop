@@ -1,4 +1,4 @@
-﻿namespace FoodShop.Services.ProductAPI.Models.DTO
+﻿namespace FoodShop.Web.Models
 {
     public class ProductDTO
     {
