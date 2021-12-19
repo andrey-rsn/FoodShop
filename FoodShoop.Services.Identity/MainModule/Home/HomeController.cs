@@ -9,6 +9,7 @@ using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using System.Threading.Tasks;
 using Duende.IdentityServer.Services;
+using FoodShoop.Services.Identity.Initializer;
 
 namespace IdentityServerHost.Quickstart.UI
 {
@@ -19,18 +20,21 @@ namespace IdentityServerHost.Quickstart.UI
         private readonly IIdentityServerInteractionService _interaction;
         private readonly IWebHostEnvironment _environment;
         private readonly ILogger _logger;
+        private readonly IDbInitializer _dbIntializer;
 
-        public HomeController(IIdentityServerInteractionService interaction, IWebHostEnvironment environment, ILogger<HomeController> logger)
+        public HomeController(IIdentityServerInteractionService interaction, IWebHostEnvironment environment, ILogger<HomeController> logger, IDbInitializer dbIntializer)
         {
             _interaction = interaction;
             _environment = environment;
             _logger = logger;
+            _dbIntializer = dbIntializer;
         }
 
         public IActionResult Index()
         {
             if (_environment.IsDevelopment())
             {
+                _dbIntializer.initialize();
                 // only show in development
                 return View();
             }

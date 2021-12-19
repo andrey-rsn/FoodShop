@@ -1,6 +1,7 @@
 ﻿using FoodShop.Services.ProductAPI.Models;
 using FoodShop.Services.ProductAPI.Models.DTO;
 using FoodShop.Services.ProductAPI.Repository;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace FoodShop.Services.ProductAPI.Controllers
@@ -16,7 +17,7 @@ namespace FoodShop.Services.ProductAPI.Controllers
             _productRepository = productRepository;
             this._response = new ResponseDTO();
         }
-
+        [Authorize]
         [HttpGet]
         public async Task<ResponseDTO> Get()
         {
@@ -33,6 +34,7 @@ namespace FoodShop.Services.ProductAPI.Controllers
             return _response;
         }
 
+        [Authorize]
         [HttpGet]
         [Route ("{id}")]
         public async Task<ResponseDTO> Get(int id)
@@ -50,8 +52,8 @@ namespace FoodShop.Services.ProductAPI.Controllers
             return _response;
         }
 
+        [Authorize]
         [HttpPost]
-        //[Route("{id}")]
         public async Task<ResponseDTO> Post([FromBody]ProductDTO productDto)
         {
             try
@@ -67,8 +69,8 @@ namespace FoodShop.Services.ProductAPI.Controllers
             return _response;
         }
 
+        [Authorize]
         [HttpPut]
-        //[Route("{id}")]
         public async Task<ResponseDTO> Put([FromBody] ProductDTO productDto)
         {
             try
@@ -84,6 +86,7 @@ namespace FoodShop.Services.ProductAPI.Controllers
             return _response;
         }
 
+        [Authorize(Roles="Admin")]
         [HttpDelete]
         [Route("{id}")]
         public async Task<ResponseDTO> Delete(int id)
