@@ -50,7 +50,7 @@ namespace FoodShoop.Services.Identity.Initializer
             ApplicationUser customerUser = new ApplicationUser()
             {
                 UserName = "customer1@gmail.com",
-                Email = "customer`@gmail.com",
+                Email = "customer1@gmail.com",
                 EmailConfirmed = true,
                 PhoneNumber = "111111111111",
                 FirstName = "Ben",

@@ -19,9 +19,9 @@ builder.Services.AddIdentityServer(options =>
     options.Events.RaiseFailureEvents = true;
     options.Events.RaiseSuccessEvents = true;
     options.EmitStaticAudienceClaim = true;
-}).AddInMemoryIdentityResources(SD.identityResources).
-AddInMemoryApiScopes(SD.apiScopes).
-AddInMemoryClients(SD.clients).
+}).AddInMemoryIdentityResources(SD.IdentityResources).
+AddInMemoryApiScopes(SD.ApiScopes).
+AddInMemoryClients(SD.Clients).
 AddAspNetIdentity<ApplicationUser>().AddDeveloperSigningCredential();
 builder.Services.AddScoped<IDbInitializer, DbInitializer>();
 var app = builder.Build();
