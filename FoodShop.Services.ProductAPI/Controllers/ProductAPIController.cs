@@ -51,7 +51,7 @@ namespace FoodShop.Services.ProductAPI.Controllers
         }
 
         [HttpPost]
-        [Route("{id}")]
+        //[Route("{id}")]
         public async Task<ResponseDTO> Post([FromBody]ProductDTO productDto)
         {
             try
@@ -68,7 +68,7 @@ namespace FoodShop.Services.ProductAPI.Controllers
         }
 
         [HttpPut]
-        [Route("{id}")]
+        //[Route("{id}")]
         public async Task<ResponseDTO> Put([FromBody] ProductDTO productDto)
         {
             try
