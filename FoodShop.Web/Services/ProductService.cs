@@ -18,7 +18,7 @@ namespace FoodShop.Web.Services
             {
                 ApiType = SD.ApiType.POST,
                 Data = productDTO,
-                Url = SD.ProductAPIBase + "/api/products/",
+                Url = SD.ProductAPIBase + "/api/products",
                 AccessToken = ""
             });
         }
@@ -38,7 +38,7 @@ namespace FoodShop.Web.Services
             return await this.SendAsync<T>(new ApiRequest()
             {
                 ApiType = SD.ApiType.GET,
-                Url = SD.ProductAPIBase + "/api/products/",
+                Url = SD.ProductAPIBase + "/api/products",
                 AccessToken = ""
             });
         }
@@ -59,7 +59,7 @@ namespace FoodShop.Web.Services
             {
                 ApiType = SD.ApiType.PUT,
                 Data= productDTO,
-                Url = SD.ProductAPIBase + "/api/products/",
+                Url = SD.ProductAPIBase + "/api/products",
                 AccessToken = ""
             });
         }
