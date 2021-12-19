@@ -77,5 +77,36 @@ namespace FoodShop.Web.Controllers
             return View(model);
 
         }
+
+        [HttpGet]
+        public async Task<IActionResult> ProductDelete(int productId)
+        {
+            if (ModelState.IsValid)
+            {
+                var response = await _productService.GetProductByIdAsync<ResponseDTO>(productId);
+                if (response != null && response.IsSuccess)
+                {
+                    ProductDTO model = JsonConvert.DeserializeObject<ProductDTO>(Convert.ToString(response.Result));
+                    return View(model);
+                }
+            }
+            return NotFound();
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> ProductDelete(ProductDTO model)
+        {
+            if (model.ProductId!=null)
+            {
+                var response = await _productService.DeleteProductAsync<ResponseDTO>(model.ProductId);
+                if ( response.IsSuccess)
+                {
+                    return RedirectToAction(nameof(ProductIndex));
+                }
+            }
+            return View(model);
+
+        }
     }
 }
