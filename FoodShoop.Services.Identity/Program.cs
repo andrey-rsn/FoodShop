@@ -4,9 +4,12 @@ using FoodShoop.Services.Identity.Initializer;
 using FoodShoop.Services.Identity.Models;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.IdentityModel.Logging;
+using System.Net;
 
 var builder = WebApplication.CreateBuilder(args);
 
+ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls12;
 // Add services to the container.
 builder.Services.AddControllersWithViews();
 ConfigurationManager configuration = builder.Configuration;
@@ -34,6 +37,7 @@ if (!app.Environment.IsDevelopment())
     app.UseExceptionHandler("/Home/Error");
     // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
     app.UseHsts();
+    IdentityModelEventSource.ShowPII = true;
 }
 
 app.UseHttpsRedirection();

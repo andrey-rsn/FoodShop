@@ -2,8 +2,7 @@ using FoodShop.Web;
 using FoodShop.Web.Services;
 using FoodShop.Web.Services.IServices;
 using Microsoft.AspNetCore.Authentication;
-
-
+using Microsoft.IdentityModel.Logging;
 
 var builder = WebApplication.CreateBuilder(args);
 ConfigurationManager Configuration = builder.Configuration;
@@ -12,6 +11,7 @@ builder.Services.AddControllersWithViews();
 builder.Services.AddHttpClient<IProductService, ProductService>();
 SD.ProductAPIBase = Configuration["ServiceUrls:ProductAPI"];
 builder.Services.AddScoped<IProductService, ProductService>();
+
 builder.Services.AddAuthentication(options =>
 {
     options.DefaultAuthenticateScheme = "Cookies";
