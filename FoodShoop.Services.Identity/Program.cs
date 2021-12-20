@@ -2,6 +2,7 @@ using FoodShoop.Services.Identity;
 using FoodShoop.Services.Identity.DBContext;
 using FoodShoop.Services.Identity.Initializer;
 using FoodShoop.Services.Identity.Models;
+using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Logging;
@@ -26,6 +27,7 @@ builder.Services.AddIdentityServer(options =>
 AddInMemoryApiScopes(SD.ApiScopes).
 AddInMemoryClients(SD.Clients).
 AddAspNetIdentity<ApplicationUser>().AddDeveloperSigningCredential();
+
 builder.Services.AddScoped<IDbInitializer, DbInitializer>();
 var app = builder.Build();
 
