@@ -17,6 +17,17 @@ namespace FoodShop.Web.Controllers
             _productService = productService;
         }
 
+        [Authorize]
+        public async Task<IActionResult> Details(int productId)
+        {
+            ProductDTO model = new();
+            var response = await _productService.GetProductByIdAsync<ResponseDTO>(productId,"");
+            if (response != null && response.IsSuccess)
+            {
+                model = JsonConvert.DeserializeObject<ProductDTO>(Convert.ToString(response.Result));
+            }
+            return View(model);
+        }
         public async Task<IActionResult> Index()
         {
             List<ProductDTO> list = new();
