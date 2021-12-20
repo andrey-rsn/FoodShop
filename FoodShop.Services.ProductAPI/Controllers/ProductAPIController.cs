@@ -17,7 +17,7 @@ namespace FoodShop.Services.ProductAPI.Controllers
             _productRepository = productRepository;
             this._response = new ResponseDTO();
         }
-        [Authorize]
+
         [HttpGet]
         public async Task<ResponseDTO> Get()
         {
@@ -34,7 +34,7 @@ namespace FoodShop.Services.ProductAPI.Controllers
             return _response;
         }
 
-        [Authorize]
+
         [HttpGet]
         [Route ("{id}")]
         public async Task<ResponseDTO> Get(int id)
