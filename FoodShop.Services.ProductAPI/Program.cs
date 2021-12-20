@@ -31,7 +31,7 @@ builder.Services.AddAuthorization(options =>
     options.AddPolicy("ApiScope", options =>
     {
         options.RequireAuthenticatedUser();
-        options.RequireClaim("scope", "FoodShop");
+        options.RequireClaim("scope", "mango");
     });
 });
 
@@ -46,7 +46,7 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
-
+app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapControllers();

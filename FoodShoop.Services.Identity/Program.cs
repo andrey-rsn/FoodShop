@@ -1,7 +1,9 @@
+using Duende.IdentityServer.Services;
 using FoodShoop.Services.Identity;
 using FoodShoop.Services.Identity.DBContext;
 using FoodShoop.Services.Identity.Initializer;
 using FoodShoop.Services.Identity.Models;
+using FoodShoop.Services.Identity.Services;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
@@ -27,7 +29,7 @@ builder.Services.AddIdentityServer(options =>
 AddInMemoryApiScopes(SD.ApiScopes).
 AddInMemoryClients(SD.Clients).
 AddAspNetIdentity<ApplicationUser>().AddDeveloperSigningCredential();
-
+builder.Services.AddScoped<IProfileService, ProfileService>();
 builder.Services.AddScoped<IDbInitializer, DbInitializer>();
 var app = builder.Build();
 

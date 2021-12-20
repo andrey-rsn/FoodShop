@@ -52,7 +52,7 @@ namespace FoodShop.Services.ProductAPI.Controllers
             return _response;
         }
 
-        [Authorize]
+        [Authorize(Roles = "Admin")]
         [HttpPost]
         public async Task<ResponseDTO> Post([FromBody]ProductDTO productDto)
         {
@@ -69,7 +69,7 @@ namespace FoodShop.Services.ProductAPI.Controllers
             return _response;
         }
 
-        [Authorize]
+        [Authorize(Roles = "Admin")]
         [HttpPut]
         public async Task<ResponseDTO> Put([FromBody] ProductDTO productDto)
         {
