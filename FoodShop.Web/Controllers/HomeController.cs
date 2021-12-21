@@ -20,12 +20,11 @@ namespace FoodShop.Web.Controllers
             _cartService = cartService;
         }
 
-        [HttpGet]
         [Authorize]
         public async Task<IActionResult> Details(int productId)
         {
             ProductDTO model = new();
-            var response = await _productService.GetProductByIdAsync<ResponseDTO>(productId,"");
+            var response = await _productService.GetProductByIdAsync<ResponseDTO>(productId, "");
             if (response != null && response.IsSuccess)
             {
                 model = JsonConvert.DeserializeObject<ProductDTO>(Convert.ToString(response.Result));
@@ -36,37 +35,39 @@ namespace FoodShop.Web.Controllers
         [HttpPost]
         [ActionName("Details")]
         [Authorize]
-        public async Task<IActionResult> DetailsPost(ProductDTO productDTO)
+        public async Task<IActionResult> DetailsPost(ProductDTO productDto)
         {
-            CartDTO cartDTO = new CartDTO()
+            CartDTO cartDto = new()
             {
-                CartHeader = new CartHeaderDTO()
+                CartHeader = new CartHeaderDTO
                 {
-                    UserId = User.Claims.Where(x => x.Type == "sub")?.FirstOrDefault()?.Value
+                    UserId = User.Claims.Where(u => u.Type == "sub")?.FirstOrDefault()?.Value
                 }
-
             };
+
             CartDetailsDTO cartDetails = new CartDetailsDTO()
             {
-                Count = productDTO.Count,
-                ProductId = productDTO.ProductId
+                Count = productDto.Count,
+                ProductId = productDto.ProductId
             };
-            var response = await _productService.GetProductByIdAsync<ResponseDTO>(productDTO.ProductId, "");
-            if(response!=null&&response.IsSuccess)
-            {
-                cartDetails.Product=JsonConvert.DeserializeObject<ProductDTO>(Convert.ToString(response.Result));
-            }
-            List<CartDetailsDTO> cartDetailsDTOs= new List<CartDetailsDTO>();
-            cartDetailsDTOs.Add(cartDetails);
-            cartDTO.CartDetails = cartDetailsDTOs;
 
-            var AccessToken = await HttpContext.GetTokenAsync("access_token");
-            var addToCartResponse= await _cartService.AddToCartAsync<ResponseDTO>(cartDTO, AccessToken);
-            if (addToCartResponse != null && addToCartResponse.IsSuccess)
+            var resp = await _productService.GetProductByIdAsync<ResponseDTO>(productDto.ProductId, "");
+            if (resp != null && resp.IsSuccess)
+            {
+                cartDetails.Product = JsonConvert.DeserializeObject<ProductDTO>(Convert.ToString(resp.Result));
+            }
+            List<CartDetailsDTO> cartDetailsDtos = new();
+            cartDetailsDtos.Add(cartDetails);
+            cartDto.CartDetails = cartDetailsDtos;
+
+            var accessToken = await HttpContext.GetTokenAsync("access_token");
+            var addToCartResp = await _cartService.AddToCartAsync<ResponseDTO>(cartDto, accessToken);
+            if (addToCartResp != null && addToCartResp.IsSuccess)
             {
                 return RedirectToAction(nameof(Index));
             }
-            return View(productDTO);
+
+            return View(productDto);
         }
         public async Task<IActionResult> Index()
         {

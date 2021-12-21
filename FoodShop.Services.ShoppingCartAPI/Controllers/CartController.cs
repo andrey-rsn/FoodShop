@@ -16,14 +16,14 @@ namespace FoodShop.Services.ShoppingCartAPI.Controllers
             _cartRepository = cartRepository;
             this._response = new ResponseDTO();
         }
-        
-        [HttpGet("GetCart/{UserId}")]
-        public async Task<ResponseDTO> GetCart(string UserId)
+
+        [HttpGet("GetCart/{userId}")]
+        public async Task<object> GetCart(string userId)
         {
             try
             {
-                CartDTO cartDTO = await _cartRepository.GetCartByUserId(UserId);
-                _response.Result= cartDTO;
+                CartDTO cartDto = await _cartRepository.GetCartByUserId(userId);
+                _response.Result = cartDto;
             }
             catch (Exception ex)
             {
@@ -34,29 +34,28 @@ namespace FoodShop.Services.ShoppingCartAPI.Controllers
         }
 
         [HttpPost("AddCart")]
-        public async Task<ResponseDTO> AddCart(CartDTO cartDto)
+        public async Task<object> AddCart(CartDTO cartDto)
         {
-
             try
             {
-                CartDTO cart = await _cartRepository.CreateUpdateCart(cartDto);
-                _response.Result = cart;
+                CartDTO cartDt = await _cartRepository.CreateUpdateCart(cartDto);
+                _response.Result = cartDt;
             }
             catch (Exception ex)
             {
                 _response.IsSuccess = false;
                 _response.ErrorMessages = new List<string>() { ex.ToString() };
             }
-            return _response; 
+            return _response;
         }
 
         [HttpPost("UpdateCart")]
-        public async Task<ResponseDTO> UpdateCart(CartDTO cartDto)
+        public async Task<object> UpdateCart(CartDTO cartDto)
         {
             try
             {
-                CartDTO cart = await _cartRepository.CreateUpdateCart(cartDto);
-                _response.Result = cart;
+                CartDTO cartDt = await _cartRepository.CreateUpdateCart(cartDto);
+                _response.Result = cartDt;
             }
             catch (Exception ex)
             {
@@ -66,29 +65,13 @@ namespace FoodShop.Services.ShoppingCartAPI.Controllers
             return _response;
         }
 
-        [HttpPost("DeleteCart")]
-        public async Task<ResponseDTO> DeleteCart([FromBody]int CartId)
+        [HttpPost("RemoveCart")]
+        public async Task<object> RemoveCart([FromBody] int cartId)
         {
             try
             {
-                bool IsSuccess = await _cartRepository.RemoveFromCart(CartId);
-                _response.Result = IsSuccess;
-            }
-            catch (Exception ex)
-            {
-                _response.IsSuccess = false;
-                _response.ErrorMessages = new List<string>() { ex.ToString() };
-            }
-            return _response;
-        }
-
-        [HttpPost("ClearCart")]
-        public async Task<ResponseDTO> ClearCart([FromBody] string UserId)
-        {
-            try
-            {
-                bool IsSuccess = await _cartRepository.ClearCart(UserId);
-                _response.Result = IsSuccess;
+                bool isSuccess = await _cartRepository.RemoveFromCart(cartId);
+                _response.Result = isSuccess;
             }
             catch (Exception ex)
             {

@@ -38,7 +38,7 @@ namespace FoodShop.Web.Services
             {
                 ApiType = SD.ApiType.POST,
                 Data = CartId,
-                Url = SD.ShoppingCartAPIBase + "/api/cart/DeleteCart",
+                Url = SD.ShoppingCartAPIBase + "/api/cart/RemoveCart",
                 AccessToken = token
             });
         }
