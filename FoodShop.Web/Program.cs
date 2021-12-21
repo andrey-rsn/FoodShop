@@ -9,8 +9,11 @@ ConfigurationManager Configuration = builder.Configuration;
 // Add services to the container.
 builder.Services.AddControllersWithViews();
 builder.Services.AddHttpClient<IProductService, ProductService>();
+builder.Services.AddHttpClient<ICartService, CartService>();
 SD.ProductAPIBase = Configuration["ServiceUrls:ProductAPI"];
+SD.ShoppingCartAPIBase = Configuration["ServiceUrls:CartAPI"];
 builder.Services.AddScoped<IProductService, ProductService>();
+builder.Services.AddScoped<ICartService, CartService>();
 
 builder.Services.AddAuthentication(options =>
 {

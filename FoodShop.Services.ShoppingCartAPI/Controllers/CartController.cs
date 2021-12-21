@@ -67,7 +67,7 @@ namespace FoodShop.Services.ShoppingCartAPI.Controllers
         }
 
         [HttpPost("DeleteCart")]
-        public async Task<ResponseDTO> UpdateCart([FromBody]int CartId)
+        public async Task<ResponseDTO> DeleteCart([FromBody]int CartId)
         {
             try
             {
