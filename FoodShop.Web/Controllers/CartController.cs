@@ -26,6 +26,12 @@ namespace FoodShop.Web.Controllers
             return View(await LoadCartDtoBasedOnLoggedInUser());
         }
 
+        [HttpGet]
+        public async Task<IActionResult> CheckOut()
+        {
+            return View(await LoadCartDtoBasedOnLoggedInUser());
+        }
+
         [HttpPost]
         public async Task<IActionResult> ApplyCoupon(CartDTO cartDTO)
         {
