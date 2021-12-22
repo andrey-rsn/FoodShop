@@ -33,6 +33,17 @@ namespace FoodShop.Web.Services
             });
         }
 
+        public async Task<T> CheckoutAsync<T>(CartHeaderDTO cartHeaderDTO, string token)
+        {
+            return await this.SendAsync<T>(new ApiRequest()
+            {
+                ApiType = SD.ApiType.POST,
+                Data = cartHeaderDTO,
+                Url = SD.ShoppingCartAPIBase + "/api/cart/Checkout",
+                AccessToken = token
+            });
+        }
+
         public async Task<T> GetCartByUserIdAsync<T>(string UserId, string token = null)
         {
             return await this.SendAsync<T>(new ApiRequest()

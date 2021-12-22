@@ -1,4 +1,6 @@
-﻿using FoodShop.Services.ShoppingCartAPI.Models.DTO;
+﻿using FoodShop.Services.ShoppingCartAPI.MessageBus;
+using FoodShop.Services.ShoppingCartAPI.Messages;
+using FoodShop.Services.ShoppingCartAPI.Models.DTO;
 using FoodShop.Services.ShoppingCartAPI.Repository;
 using Microsoft.AspNetCore.Mvc;
 
@@ -10,12 +12,14 @@ namespace FoodShop.Services.ShoppingCartAPI.Controllers
     public class CartController : Controller
     {
         private readonly ICartRepository _cartRepository;
+        private readonly IMessageBus _messageBus;
         protected ResponseDTO _response;
 
-        public CartController(ICartRepository cartRepository)
+        public CartController(ICartRepository cartRepository, IMessageBus messageBus)
         {
             _cartRepository = cartRepository;
             this._response = new ResponseDTO();
+            _messageBus = messageBus;
         }
 
         [HttpGet("GetCart/{userId}")]
@@ -107,6 +111,27 @@ namespace FoodShop.Services.ShoppingCartAPI.Controllers
             {
                 bool isSuccess = await _cartRepository.RemoveCoupon(userId);
                 _response.Result = isSuccess;
+            }
+            catch (Exception ex)
+            {
+                _response.IsSuccess = false;
+                _response.ErrorMessages = new List<string>() { ex.ToString() };
+            }
+            return _response;
+        }
+
+        [HttpPost("Checkout")]
+        public async Task<object> Checkout(CheckoutHeaderDTO checkoutHeaderDTO)
+        {
+            try
+            {
+                CartDTO cartDTO = await _cartRepository.GetCartByUserId(checkoutHeaderDTO.UserId);
+                if(cartDTO==null)
+                {
+                    return BadRequest();
+                }
+                checkoutHeaderDTO.CartDetails = cartDTO.CartDetails;
+                await _messageBus.PublishMessage(checkoutHeaderDTO, "checkoutmessagetopic");
             }
             catch (Exception ex)
             {

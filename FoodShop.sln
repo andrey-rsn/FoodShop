@@ -15,7 +15,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "FoodShoop.Services.Identity
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "FoodShop.Services.ShoppingCartAPI", "FoodShop.Services.ShoppingCartAPI\FoodShop.Services.ShoppingCartAPI.csproj", "{FA57D5C4-B05C-4457-A081-C979A4ADF185}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FoodShop.Services.CouponAPI", "FoodShop.Services.CouponAPI\FoodShop.Services.CouponAPI.csproj", "{4E5204F3-F25E-4D84-9235-F644C6A1C813}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "FoodShop.Services.CouponAPI", "FoodShop.Services.CouponAPI\FoodShop.Services.CouponAPI.csproj", "{4E5204F3-F25E-4D84-9235-F644C6A1C813}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

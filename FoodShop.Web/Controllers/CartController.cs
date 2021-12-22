@@ -26,10 +26,31 @@ namespace FoodShop.Web.Controllers
             return View(await LoadCartDtoBasedOnLoggedInUser());
         }
 
-        [HttpGet]
+        
         public async Task<IActionResult> CheckOut()
         {
             return View(await LoadCartDtoBasedOnLoggedInUser());
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> CheckOut(CartDTO cartDTO)
+        {
+            try
+            {
+                var accessToken = await HttpContext.GetTokenAsync("access_token");
+                var response = await _cartService.CheckoutAsync<ResponseDTO>(cartDTO.CartHeader, accessToken);
+                return RedirectToAction(nameof(Confirmation));
+            }
+            catch (Exception ex)
+            {
+                return View(cartDTO);
+            }
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> Confirmation()
+        {
+            return View();
         }
 
         [HttpPost]
