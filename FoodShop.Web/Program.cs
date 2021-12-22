@@ -10,11 +10,13 @@ ConfigurationManager Configuration = builder.Configuration;
 builder.Services.AddControllersWithViews();
 builder.Services.AddHttpClient<IProductService, ProductService>();
 builder.Services.AddHttpClient<ICartService, CartService>();
+builder.Services.AddHttpClient<ICouponService, CouponService>();
 SD.ProductAPIBase = Configuration["ServiceUrls:ProductAPI"];
 SD.ShoppingCartAPIBase = Configuration["ServiceUrls:CartAPI"];
+SD.CouponAPIBase = Configuration["ServiceUrls:CouponAPI"];
 builder.Services.AddScoped<IProductService, ProductService>();
 builder.Services.AddScoped<ICartService, CartService>();
-
+builder.Services.AddScoped<ICouponService, CouponService>();
 builder.Services.AddAuthentication(options =>
 {
     options.DefaultScheme = "Cookies";
