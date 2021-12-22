@@ -8,11 +8,12 @@ namespace FoodShop.Services.ShoppingCartAPI.Models
         [Key]
         public int CartDetailsId { get; set; }
 
-        public int CartHeaderId { get; set; }
+        
+        public int? CartHeaderId { get; set; }
 
         [ForeignKey(nameof(CartHeaderId))]
 
-        public virtual CartHeader CartHeader { get; set; }
+        public virtual CartHeader? CartHeader { get; set; }
 
         public int ProductId { get; set; }
 

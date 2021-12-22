@@ -69,6 +69,7 @@ namespace FoodShop.Web.Controllers
 
             return View(productDto);
         }
+
         public async Task<IActionResult> Index()
         {
             List<ProductDTO> list = new();
