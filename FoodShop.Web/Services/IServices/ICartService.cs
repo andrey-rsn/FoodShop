@@ -10,5 +10,6 @@ namespace FoodShop.Web.Services.IServices
         Task<T> RemoveFromCartAsync<T>(int CartId, string token );
         Task<T> ApplyCouponAsync<T>(CartDTO cartDTO, string token);
         Task<T> RemoveCouponAsync<T>(string userId, string token);
+        Task<T> CheckoutAsync<T>(CartHeaderDTO cartHeaderDTO, string token);
     }
 }

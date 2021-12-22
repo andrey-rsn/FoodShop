@@ -1,4 +1,5 @@
-﻿using FoodShop.Services.ShoppingCartAPI.Models.DTO;
+﻿using FoodShop.Services.ShoppingCartAPI.Messages;
+using FoodShop.Services.ShoppingCartAPI.Models.DTO;
 using FoodShop.Services.ShoppingCartAPI.Repository;
 using Microsoft.AspNetCore.Mvc;
 
@@ -107,6 +108,27 @@ namespace FoodShop.Services.ShoppingCartAPI.Controllers
             {
                 bool isSuccess = await _cartRepository.RemoveCoupon(userId);
                 _response.Result = isSuccess;
+            }
+            catch (Exception ex)
+            {
+                _response.IsSuccess = false;
+                _response.ErrorMessages = new List<string>() { ex.ToString() };
+            }
+            return _response;
+        }
+
+        [HttpPost("Checkout")]
+        public async Task<object> Checkout(CheckoutHeaderDTO checkoutHeaderDTO)
+        {
+            try
+            {
+                CartDTO cartDTO = await _cartRepository.GetCartByUserId(checkoutHeaderDTO.UserId);
+                if(cartDTO==null)
+                {
+                    return BadRequest();
+                }
+                checkoutHeaderDTO.CartDetails = cartDTO.CartDetails;
+               
             }
             catch (Exception ex)
             {
