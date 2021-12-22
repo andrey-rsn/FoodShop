@@ -11,15 +11,16 @@ namespace FoodShop.Web.Controllers
         private readonly ILogger<HomeController> _logger;
         private readonly IProductService _productService;
         private readonly ICartService _cartService;
-
-        public CartController(ILogger<HomeController> logger, IProductService productService, ICartService cartService)
+        private readonly ICouponService _couponService;
+        public CartController(ILogger<HomeController> logger, IProductService productService, ICartService cartService, ICouponService couponService)
         {
             _logger = logger;
             _productService = productService;
             _cartService = cartService;
+            _couponService = couponService;
         }
 
-        
+
         public async Task<IActionResult> CartIndex()
         {
             return View(await LoadCartDtoBasedOnLoggedInUser());
@@ -77,10 +78,20 @@ namespace FoodShop.Web.Controllers
             }
             if(cartDTO.CartHeader!=null)
             {
+                if(!string.IsNullOrEmpty(cartDTO.CartHeader.CouponCode))
+                {
+                    var coupon = await _couponService.GetCoupon<ResponseDTO>(cartDTO.CartHeader.CouponCode, accessToken);
+                    if (coupon.Result != null && coupon.IsSuccess)
+                    {
+                        var cuponObj = JsonConvert.DeserializeObject<CouponDTO>(Convert.ToString(coupon.Result));
+                        cartDTO.CartHeader.DiscountTotal = cuponObj.DiscountAmount;
+                    }
+                }
                 foreach(var details in cartDTO.CartDetails)
                 {
                     cartDTO.CartHeader.OrderTotal += (details.Product.Price * details.Count);
                 }
+                cartDTO.CartHeader.OrderTotal -= cartDTO.CartHeader.DiscountTotal;
             }
             return cartDTO;
         }
