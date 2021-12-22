@@ -1,6 +1,7 @@
 using AutoMapper;
 using FoodShop.Services.CouponAPI;
 using FoodShop.Services.CouponAPI.DBContext;
+using FoodShop.Services.CouponAPI.Repository;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 
@@ -10,7 +11,7 @@ var builder = WebApplication.CreateBuilder(args);
 IMapper mapper = MappingConfig.RegisterMaps().CreateMapper();
 ConfigurationManager configuration = builder.Configuration;
 builder.Services.AddSingleton(mapper);
-//builder.Services.AddScoped<ICartRepository, CartRepository>();
+builder.Services.AddScoped<ICouponRepository, CouponRepository>();
 builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
