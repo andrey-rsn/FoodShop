@@ -1,4 +1,5 @@
-﻿using FoodShop.Services.ShoppingCartAPI.Messages;
+﻿using FoodShop.Services.ShoppingCartAPI.MessageBus;
+using FoodShop.Services.ShoppingCartAPI.Messages;
 using FoodShop.Services.ShoppingCartAPI.Models.DTO;
 using FoodShop.Services.ShoppingCartAPI.Repository;
 using Microsoft.AspNetCore.Mvc;
@@ -11,12 +12,14 @@ namespace FoodShop.Services.ShoppingCartAPI.Controllers
     public class CartController : Controller
     {
         private readonly ICartRepository _cartRepository;
+        private readonly IMessageBus _messageBus;
         protected ResponseDTO _response;
 
-        public CartController(ICartRepository cartRepository)
+        public CartController(ICartRepository cartRepository, IMessageBus messageBus)
         {
             _cartRepository = cartRepository;
             this._response = new ResponseDTO();
+            _messageBus = messageBus;
         }
 
         [HttpGet("GetCart/{userId}")]
@@ -128,7 +131,7 @@ namespace FoodShop.Services.ShoppingCartAPI.Controllers
                     return BadRequest();
                 }
                 checkoutHeaderDTO.CartDetails = cartDTO.CartDetails;
-               
+                await _messageBus.PublishMessage(checkoutHeaderDTO, "checkoutmessagetopic");
             }
             catch (Exception ex)
             {

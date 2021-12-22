@@ -1,8 +1,9 @@
-﻿using FoodShop.Services.ShoppingCartAPI.Models.DTO;
+﻿using FoodShop.Services.ShoppingCartAPI.MessageBus;
+using FoodShop.Services.ShoppingCartAPI.Models.DTO;
 
 namespace FoodShop.Services.ShoppingCartAPI.Messages
 {
-    public class CheckoutHeaderDTO
+    public class CheckoutHeaderDTO:BaseMessage
     {
         public int CartHeaderId { get; set; }
 
