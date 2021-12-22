@@ -25,6 +25,18 @@ namespace FoodShop.Web.Controllers
             return View(await LoadCartDtoBasedOnLoggedInUser());
         }
 
+        public async Task<IActionResult> Remove(int cartDetailsId)
+        {
+            var UserId = User.Claims.Where(x => x.Type == "sub")?.FirstOrDefault()?.Value;
+            var accessToken = await HttpContext.GetTokenAsync("access_token");
+            var response = await _cartService.RemoveFromCartAsync<ResponseDTO>(cartDetailsId, accessToken);
+
+            if (response != null && response.IsSuccess)
+            {
+                return RedirectToAction(nameof(CartIndex));
+            }
+            return View();
+        }
         private async Task<CartDTO> LoadCartDtoBasedOnLoggedInUser()
         {
             var UserId = User.Claims.Where(x => x.Type == "sub")?.FirstOrDefault()?.Value;

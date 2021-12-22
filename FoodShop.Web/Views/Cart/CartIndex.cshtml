@@ -67,7 +67,7 @@
                         <button type="submit" class="btn-success"> Apply </button>
                     </div>
                     <div class="col-6 text-end">
-                        <span class="text-danger" style="font-size:21px;">  Order Total : Order Total <br /></span>
+                        <span class="text-danger" style="font-size:21px;">  Order Total : @string.Format("{0:c}",Model.CartHeader.OrderTotal) <br /></span>
                     </div>
                 </div>
             </div>
