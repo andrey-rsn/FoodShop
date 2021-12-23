@@ -15,10 +15,12 @@ builder.Services.AddControllers();
 SD.AzureBusConnection = configuration["ConnectionStrings:AzureBus"];
 builder.Services.AddSingleton(mapper);
 builder.Services.AddScoped<ICartRepository, CartRepository>();
+builder.Services.AddScoped<ICouponRepository, CouponRepository>();
 builder.Services.AddSingleton<IMessageBus, AzureServiceBusMessageBus>();
 builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
+builder.Services.AddHttpClient<ICouponRepository, CouponRepository>(u => u.BaseAddress = new Uri(configuration["ConnectionStrings:CouponAPI"]));
 builder.Services.AddDbContext<ApplicationDbContext>(options => options.UseSqlServer(configuration.GetConnectionString("Dev")));
 builder.Services.AddMvc(options => options.ModelValidatorProviders.Clear());
 builder.Services.AddAuthentication("Bearer").AddJwtBearer("Bearer", options =>
