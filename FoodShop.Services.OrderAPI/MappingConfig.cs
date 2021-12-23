@@ -12,7 +12,9 @@ namespace FoodShop.Services.OrderAPI
             {
                 config.CreateMap<OrderDetailsDTO, OrderDetails>().ReverseMap();
                 config.CreateMap<OrderHeaderDTO, OrderHeader>().ReverseMap();
-                
+                config.CreateMap<CheckoutHeaderDTO, OrderHeader>().ReverseMap();
+                config.CreateMap<CheckoutHeaderDTO, OrderDetails>().ReverseMap();
+
             });
             return mappingConfig;
         }

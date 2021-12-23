@@ -1,27 +1,60 @@
 using AutoMapper;
 using FoodShop.Services.OrderAPI;
 using FoodShop.Services.OrderAPI.DBContext;
+using FoodShop.Services.OrderAPI.Extensions;
+using FoodShop.Services.OrderAPI.Messaging;
 using FoodShop.Services.OrderAPI.Repository;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 
 var builder = WebApplication.CreateBuilder(args);
-var optionBuilder = new DbContextOptionsBuilder<ApplicationDbContext>();
-// Add services to the container.
-IMapper mapper = MappingConfig.RegisterMaps().CreateMapper();
 ConfigurationManager configuration = builder.Configuration;
+builder.Services.AddDbContext<ApplicationDbContext>(options =>
+               options.UseSqlServer(configuration.GetConnectionString("Dev")));
+
+
+IMapper mapper = MappingConfig.RegisterMaps().CreateMapper();
+builder.Services.AddSingleton(mapper);
+builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
+builder.Services.AddScoped<IOrderRepository, OrderRepository>();
+
+var optionBuilder = new DbContextOptionsBuilder<ApplicationDbContext>();
+optionBuilder.UseSqlServer(configuration.GetConnectionString("Dev"));
+
+//builder.Services.AddHostedService<RabbitMQPaymentConsumer>();
+//services.AddHostedService<RabbitMQCheckoutConsumer>();
+builder.Services.AddSingleton(new OrderRepository(optionBuilder.Options,mapper));
+builder.Services.AddSingleton<IAzureServiceBusConsumer, AzureServiceBusConsumer>();
+//services.AddSingleton<IMessageBus, AzureServiceBusMessageBus>();
+
+//IMapper mapper = MappingConfig.RegisterMaps().CreateMapper();
+//builder.Services.AddDbContext<ApplicationDbContext>(options => options.UseSqlServer(configuration.GetConnectionString("Dev")));
+//builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
+//builder.Services.AddSingleton(mapper);
+//builder.Services.AddSingleton(configuration);
+//builder.Services.AddScoped<IOrderRepository,OrderRepository>();
+//
+//
+//var optionBuilder = new DbContextOptionsBuilder<ApplicationDbContext>();
+//optionBuilder.UseSqlServer(configuration.GetConnectionString("Dev"));
+//
+//builder.Services.AddSingleton(new OrderRepository(optionBuilder.Options,mapper));
+//builder.Services.AddSingleton<IAzureServiceBusConsumer,AzureServiceBusConsumer>();
 builder.Services.AddControllers();
 //SD.AzureBusConnection = configuration["ConnectionStrings:AzureBus"];
-builder.Services.AddSingleton(mapper);
-builder.Services.AddScoped<IOrderRepository, OrderRepository>();
-optionBuilder.UseSqlServer(configuration.GetConnectionString("Dev"));
-builder.Services.AddSingleton(new OrderRepository(optionBuilder.Options,mapper));
-//builder.Services.AddSingleton<IMessageBus, AzureServiceBusMessageBus>();
-builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
+
+
+
+
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
-builder.Services.AddDbContext<ApplicationDbContext>(options => options.UseSqlServer(configuration.GetConnectionString("Dev")));
-builder.Services.AddMvc(options => options.ModelValidatorProviders.Clear());
+
+
+//builder.Services.AddMvc(options => options.ModelValidatorProviders.Clear());
+
+
+
+
 builder.Services.AddAuthentication("Bearer").AddJwtBearer("Bearer", options =>
 {
     options.Authority = "https://localhost:44345";
@@ -53,5 +86,5 @@ app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapControllers();
-
+app.UseAzureServiceBusConsumer();
 app.Run();

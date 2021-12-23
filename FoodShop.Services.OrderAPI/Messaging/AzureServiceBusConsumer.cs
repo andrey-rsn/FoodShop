@@ -8,17 +8,17 @@ using System.Text;
 
 namespace FoodShop.Services.OrderAPI.Messaging
 {
-    public class AzureServiceBusConsumer
+    public class AzureServiceBusConsumer:IAzureServiceBusConsumer
     {
         private readonly string _serviceBusConnectionString;
         private readonly string _subscriptionName;
         private readonly string _checkoutMessageTopic;
-        private readonly IOrderRepository _orderRepository;
+        private readonly OrderRepository _orderRepository;
         private readonly IMapper _mapper;
         private readonly IConfiguration _configuration;
 
         private ServiceBusProcessor _checkOutProcessor;
-        public AzureServiceBusConsumer(IOrderRepository orderRepository, IMapper mapper, IConfiguration configuration)
+        public AzureServiceBusConsumer(OrderRepository orderRepository, IMapper mapper, IConfiguration configuration)
         {
             _orderRepository = orderRepository;
             _mapper = mapper;
@@ -50,13 +50,36 @@ namespace FoodShop.Services.OrderAPI.Messaging
         {
             var message = args.Message;
             var body = Encoding.UTF8.GetString(message.Body);
-            CheckoutHeaderDTO checkoutHeaderDTO= JsonConvert.DeserializeObject<CheckoutHeaderDTO>(body);
+            CheckoutHeaderDTO checkoutHeaderDto= JsonConvert.DeserializeObject<CheckoutHeaderDTO>(body);
 
-            OrderHeader orderHeader = _mapper.Map<OrderHeader>(checkoutHeaderDTO);
-            foreach(var details in checkoutHeaderDTO.CartDetails)
+            OrderHeader orderHeader = new()
             {
-                OrderDetails orderDetails= _mapper.Map<OrderDetails>(details);
-                orderHeader.CartTotalItems += details.Count;
+                UserId = checkoutHeaderDto.UserId,
+                FirstName = checkoutHeaderDto.FirstName,
+                LastName = checkoutHeaderDto.LastName,
+                OrderDetails = new List<OrderDetails>(),
+                CardNumber = checkoutHeaderDto.CardNumber,
+                CouponCode = checkoutHeaderDto.CouponCode,
+                CVV = checkoutHeaderDto.CVV,
+                DiscountTotal = checkoutHeaderDto.DiscountTotal,
+                EMail = checkoutHeaderDto.EMail,
+                ExpiryMonthYear = checkoutHeaderDto.ExpiryMonthYear,
+                OrderTime = DateTime.Now,
+                OrderTotal = checkoutHeaderDto.OrderTotal,
+                PaymentStatus = false,
+                Phone = checkoutHeaderDto.Phone,
+                PickUpDateTime = checkoutHeaderDto.PickUpDateTime
+            };
+            foreach (var detailList in checkoutHeaderDto.CartDetails)
+            {
+                OrderDetails orderDetails = new()
+                {
+                    ProductId = detailList.ProductId,
+                    ProductName = detailList.Product.Name,
+                    Price = detailList.Product.Price,
+                    Count = detailList.Count
+                };
+                orderHeader.CartTotalItems += detailList.Count;
                 orderHeader.OrderDetails.Add(orderDetails);
             }
 
