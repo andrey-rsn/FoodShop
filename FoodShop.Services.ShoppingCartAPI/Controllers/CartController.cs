@@ -1,5 +1,6 @@
 ﻿using FoodShop.Services.ShoppingCartAPI.MessageBus;
 using FoodShop.Services.ShoppingCartAPI.Messages;
+using FoodShop.Services.ShoppingCartAPI.Models.Dto;
 using FoodShop.Services.ShoppingCartAPI.Models.DTO;
 using FoodShop.Services.ShoppingCartAPI.Repository;
 using Microsoft.AspNetCore.Mvc;
@@ -12,14 +13,16 @@ namespace FoodShop.Services.ShoppingCartAPI.Controllers
     public class CartController : Controller
     {
         private readonly ICartRepository _cartRepository;
+        private readonly ICouponRepository _couponRepository;
         private readonly IMessageBus _messageBus;
         protected ResponseDTO _response;
 
-        public CartController(ICartRepository cartRepository, IMessageBus messageBus)
+        public CartController(ICartRepository cartRepository, IMessageBus messageBus, ICouponRepository couponRepository)
         {
             _cartRepository = cartRepository;
             this._response = new ResponseDTO();
             _messageBus = messageBus;
+            _couponRepository = couponRepository;
         }
 
         [HttpGet("GetCart/{userId}")]
@@ -129,6 +132,32 @@ namespace FoodShop.Services.ShoppingCartAPI.Controllers
                 if(cartDTO==null)
                 {
                     return BadRequest();
+                }
+
+                if(!string.IsNullOrEmpty(checkoutHeaderDTO.CouponCode))
+                {
+                    CouponDTO couponDTO = await _couponRepository.GetCoupon(checkoutHeaderDTO.CouponCode); 
+                    if(couponDTO==null)
+                    {
+                        _response.IsSuccess = false;
+                        _response.ErrorMessages = new List<string>()
+                        {
+                            "Купон недейстивтелен"
+                        };
+                        _response.DisplayMessage = "Купон недейстивтелен";
+                        return _response;
+                    }
+                    else if(checkoutHeaderDTO.DiscountTotal!=couponDTO.DiscountAmount)
+                    {
+                        _response.IsSuccess = false;
+                        _response.ErrorMessages = new List<string>()
+                        {
+                            "Купон недейстивтелен"
+                        };
+                        _response.DisplayMessage = "Купон недейстивтелен";
+                        return _response;
+                    }
+
                 }
                 checkoutHeaderDTO.CartDetails = cartDTO.CartDetails;
                 await _messageBus.PublishMessage(checkoutHeaderDTO, "checkoutmessagetopic");
