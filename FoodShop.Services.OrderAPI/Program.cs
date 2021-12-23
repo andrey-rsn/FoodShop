@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 
 var builder = WebApplication.CreateBuilder(args);
-
+var optionBuilder = new DbContextOptionsBuilder<ApplicationDbContext>();
 // Add services to the container.
 IMapper mapper = MappingConfig.RegisterMaps().CreateMapper();
 ConfigurationManager configuration = builder.Configuration;
@@ -14,6 +14,8 @@ builder.Services.AddControllers();
 //SD.AzureBusConnection = configuration["ConnectionStrings:AzureBus"];
 builder.Services.AddSingleton(mapper);
 builder.Services.AddScoped<IOrderRepository, OrderRepository>();
+optionBuilder.UseSqlServer(configuration.GetConnectionString("Dev"));
+builder.Services.AddSingleton(new OrderRepository(optionBuilder.Options,mapper));
 //builder.Services.AddSingleton<IMessageBus, AzureServiceBusMessageBus>();
 builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
 builder.Services.AddEndpointsApiExplorer();
