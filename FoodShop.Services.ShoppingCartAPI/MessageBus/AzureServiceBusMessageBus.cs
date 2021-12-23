@@ -1,5 +1,4 @@
-﻿using Microsoft.Azure.ServiceBus;
-using Microsoft.Azure.ServiceBus.Core;
+﻿using Azure.Messaging.ServiceBus;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using System;
@@ -15,16 +14,20 @@ namespace FoodShop.Services.ShoppingCartAPI.MessageBus
 
             public async Task PublishMessage(BaseMessage message, string topicName)
             {
-                ISenderClient senderClient = new TopicClient(SD.AzureBusConnection, topicName);
+                await using var client = new ServiceBusClient(SD.AzureBusConnection);
 
-                var JsonMessage = JsonConvert.SerializeObject(message);
-                var finalMessage = new Message(Encoding.UTF8.GetBytes(JsonMessage))
+                ServiceBusSender sender = client.CreateSender(topicName);
+
+                var jsonMessage = JsonConvert.SerializeObject(message);
+                ServiceBusMessage finalMessage = new ServiceBusMessage(Encoding.UTF8.GetBytes(jsonMessage))
                 {
                     CorrelationId = Guid.NewGuid().ToString()
                 };
-                await senderClient.SendAsync(finalMessage);
-                await senderClient.CloseAsync();
-            }
+
+                await sender.SendMessageAsync(finalMessage);
+
+                await client.DisposeAsync();
+        }
         }
     
 }

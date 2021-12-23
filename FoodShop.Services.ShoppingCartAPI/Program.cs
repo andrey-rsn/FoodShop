@@ -13,7 +13,6 @@ IMapper mapper = MappingConfig.RegisterMaps().CreateMapper();
 ConfigurationManager configuration = builder.Configuration;
 builder.Services.AddControllers();
 SD.AzureBusConnection = configuration["ConnectionStrings:AzureBus"];
-// Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddSingleton(mapper);
 builder.Services.AddScoped<ICartRepository, CartRepository>();
 builder.Services.AddSingleton<IMessageBus, AzureServiceBusMessageBus>();
