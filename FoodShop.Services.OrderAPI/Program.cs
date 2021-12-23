@@ -1,8 +1,7 @@
 using AutoMapper;
-using FoodShop.Services.ShoppingCartAPI;
-using FoodShop.Services.ShoppingCartAPI.DBContext;
-using FoodShop.Services.ShoppingCartAPI.MessageBus;
-using FoodShop.Services.ShoppingCartAPI.Repository;
+using FoodShop.Services.OrderAPI;
+using FoodShop.Services.OrderAPI.DBContext;
+using FoodShop.Services.OrderAPI.Repository;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 
@@ -12,10 +11,10 @@ var builder = WebApplication.CreateBuilder(args);
 IMapper mapper = MappingConfig.RegisterMaps().CreateMapper();
 ConfigurationManager configuration = builder.Configuration;
 builder.Services.AddControllers();
-SD.AzureBusConnection = configuration["ConnectionStrings:AzureBus"];
+//SD.AzureBusConnection = configuration["ConnectionStrings:AzureBus"];
 builder.Services.AddSingleton(mapper);
-builder.Services.AddScoped<ICartRepository, CartRepository>();
-builder.Services.AddSingleton<IMessageBus, AzureServiceBusMessageBus>();
+builder.Services.AddScoped<IOrderRepository, OrderRepository>();
+//builder.Services.AddSingleton<IMessageBus, AzureServiceBusMessageBus>();
 builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
@@ -38,7 +37,6 @@ builder.Services.AddAuthorization(options =>
         options.RequireClaim("scope", "mango");
     });
 });
-
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
@@ -46,7 +44,6 @@ if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
     app.UseSwaggerUI();
-
 }
 
 app.UseHttpsRedirection();
