@@ -16,9 +16,11 @@ namespace FoodShop.Services.OrderAPI.Messaging
         private readonly OrderRepository _orderRepository;
         private readonly IMapper _mapper;
         private readonly IConfiguration _configuration;
+        private readonly IMessageBus _messageBus;
+        private readonly string _orderPaymentTopic;
 
         private ServiceBusProcessor _checkOutProcessor;
-        public AzureServiceBusConsumer(OrderRepository orderRepository, IMapper mapper, IConfiguration configuration)
+        public AzureServiceBusConsumer(OrderRepository orderRepository, IMapper mapper, IConfiguration configuration, IMessageBus messageBus)
         {
             _orderRepository = orderRepository;
             _mapper = mapper;
@@ -28,6 +30,8 @@ namespace FoodShop.Services.OrderAPI.Messaging
             _checkoutMessageTopic = _configuration.GetConnectionString("checkoutmessagetopic");
             var client = new ServiceBusClient(_serviceBusConnectionString);
             _checkOutProcessor = client.CreateProcessor(_checkoutMessageTopic, _subscriptionName);
+            _messageBus = messageBus;
+            _orderPaymentTopic = configuration.GetConnectionString("OrderPaymentTopic");
         }
 
         public async Task Start()
@@ -84,7 +88,26 @@ namespace FoodShop.Services.OrderAPI.Messaging
             }
 
             await _orderRepository.AddOrder(_mapper.Map<OrderHeaderDTO>(orderHeader));
+            PaymentRequestMessage paymentRequestMessage = new PaymentRequestMessage()
+            {
+                Name = orderHeader.FirstName + " " + orderHeader.LastName,
+                CardNumber = orderHeader.CardNumber,
+                CVV = orderHeader.CVV,
+                ExpiryMonthYear = orderHeader.ExpiryMonthYear,
+                OrderId = orderHeader.OrderHeaderId,
+                OrderTotal = orderHeader.OrderTotal,
+                Email = orderHeader.EMail
+            };
 
+            try
+            {
+                await _messageBus.PublishMessage(paymentRequestMessage, _orderPaymentTopic);
+                await args.CompleteMessageAsync(args.Message);
+            }
+            catch(Exception ex)
+            {
+                throw;
+            }
         }
     }
 }

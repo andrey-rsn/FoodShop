@@ -12,7 +12,7 @@ ConfigurationManager configuration = builder.Configuration;
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
                options.UseSqlServer(configuration.GetConnectionString("Dev")));
 
-
+SD.AzureBusConnection = configuration.GetConnectionString("AzureBus");
 IMapper mapper = MappingConfig.RegisterMaps().CreateMapper();
 builder.Services.AddSingleton(mapper);
 builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
@@ -25,7 +25,7 @@ optionBuilder.UseSqlServer(configuration.GetConnectionString("Dev"));
 //services.AddHostedService<RabbitMQCheckoutConsumer>();
 builder.Services.AddSingleton(new OrderRepository(optionBuilder.Options,mapper));
 builder.Services.AddSingleton<IAzureServiceBusConsumer, AzureServiceBusConsumer>();
-//services.AddSingleton<IMessageBus, AzureServiceBusMessageBus>();
+builder.Services.AddSingleton<IMessageBus, AzureServiceBusMessageBus>();
 
 //IMapper mapper = MappingConfig.RegisterMaps().CreateMapper();
 //builder.Services.AddDbContext<ApplicationDbContext>(options => options.UseSqlServer(configuration.GetConnectionString("Dev")));
