@@ -1,4 +1,5 @@
 ﻿using Azure.Messaging.ServiceBus;
+using FoodShop.Services.PaymentAPI;
 using FoodShop.Services.PaymentAPI.Models;
 using Newtonsoft.Json;
 using System.Text;
