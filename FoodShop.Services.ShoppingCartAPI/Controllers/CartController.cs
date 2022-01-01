@@ -161,6 +161,7 @@ namespace FoodShop.Services.ShoppingCartAPI.Controllers
                 }
                 checkoutHeaderDTO.CartDetails = cartDTO.CartDetails;
                 await _messageBus.PublishMessage(checkoutHeaderDTO, "checkoutmessagetopic");
+                await _cartRepository.ClearCart(checkoutHeaderDTO.UserId);
             }
             catch (Exception ex)
             {
