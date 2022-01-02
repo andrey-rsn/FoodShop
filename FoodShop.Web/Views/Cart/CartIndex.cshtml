@@ -11,10 +11,10 @@
             <div class="card-header bg-dark text-light ml-0 row ">
                 <div class="col-6">
                     <i class="fa fa-shopping-cart"></i> &nbsp;
-                    Shopping Cart
+                    Корзина покупок
                 </div>
                 <div class="col-6 text-end">
-                    <a asp-action ="Index" asp-controller= "Home" class="btn btn-outline-warning btn-sm">Continue Shopping</a>
+                    <a asp-action ="Index" asp-controller= "Home" class="btn btn-outline-warning btn-sm">Продолжить покупки</a>
                 </div>
             </div>
             <div class="card-body">
@@ -23,13 +23,13 @@
                         <div class="col-lg-2">
                         </div>
                         <div class="col-lg-5">
-                            Product Details
+                            Детали продукта
                         </div>
                         <div class="col-lg-2">
-                            Price
+                            Цена
                         </div>
                         <div class="col-lg-2">
-                            Count
+                            Количество
                         </div>
                         <div class="col-lg-1">
                         </div>
@@ -66,13 +66,13 @@
                             {
                                 <span>Coupon:</span>
                                 <input asp-for ="CartHeader.CouponCode" />
-                                <button type="submit" asp-action="ApplyCoupon" class="btn-success"> Apply </button>
+                                <button type="submit" asp-action="ApplyCoupon" class="btn-success"> Применить купон </button>
                             }
                             else
                             {
-                                <span>Coupon:</span>
+                                <span>Промокод:</span>
                                 <input asp-for="CartHeader.CouponCode" disabled />
-                                <button type="submit" asp-action="RemoveCoupon" class="btn-danger"> Remove </button>
+                                <button type="submit" asp-action="RemoveCoupon" class="btn-danger"> Удалить </button>
                             }
                             
                     </div>
@@ -80,7 +80,7 @@
                         <span class="text-danger" style="font-size:21px;">  Order Total : @string.Format("{0:c}",Model.CartHeader.OrderTotal) <br /></span>
                         @if(Model.CartHeader.DiscountTotal>0)
                             {
-                                <span class="text-success">Order Discount: @string.Format("{0:c}",Model.CartHeader.DiscountTotal)</span>
+                                <span class="text-success">Скидка: @string.Format("{0:c}",Model.CartHeader.DiscountTotal)</span>
                             }
                         </div>
                 </div>
@@ -90,7 +90,7 @@
                 </div>
                 <div class="col-6 col-md-3">
                     <a asp-action="CheckOut" class="btn btn-success form-control ">
-                        <span>Checkout</span>
+                        <span>Оформить заказ</span>
                     </a>
                 </div>
             </div>
